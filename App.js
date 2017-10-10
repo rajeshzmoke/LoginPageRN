@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -12,8 +6,11 @@ import {
   Text,
   View
 } from 'react-native';
-import FBSDK, { LoginManager } from 'react-native-fbsdk';
+import FBSDK, { LoginManager, LoginButton } from 'react-native-fbsdk';
+
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+import { Button } from 'react-native';
+
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -52,16 +49,41 @@ componentWillMount(){
   render() {
     return (
       <View style={styles.container}>
+        <GoogleSigninButton
+          style={{width: 210, height: 48}}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Light}
+          onPress={this.googleLogin}/>
+        {/* <Button
+          onPress={this.fbAuth}
+          size={FBSDK.LoginButton.defaultProps.style}
+          color={FBSDK.LoginButton.defaultProps}
+          title='Login with Fb'
+          color='#4267B2'/> */}
+          <LoginButton
+            style={{width: 200, height: 40}}
+             publishPermissions={['publish_actions']}
+             onLoginFinished={
+               (error, result) => {
+                if (error) {
+                     alert('Login failed with error: ' + result.error);
+                 } else if (result.isCancelled) {
+                     alert('Login was cancelled');
+                 } else {
+                     alert('Login was successful with permissions: '
+                         + result.grantedPermissions)
+                 }
+              }
+            }
+              onLogoutFinished={() => alert('User logged out')} />
+
+{/*
         <TouchableOpacity onPress={this.fbAuth}>
           <Text>
             Login with facebook
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.googleLogin}>
-          <Text>
-            Login with Google
-          </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
       </View>
     );
   }
